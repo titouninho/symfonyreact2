@@ -14,18 +14,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext:["groups"=>["users_read"]])]
 #[UniqueEntity("email", message: "Un utilisateur ayant cette adresse email existe deja")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["customers_read"  , "invoices_read" , "invoices_subresource"])]
+    #[Groups(["customers_read"  , "invoices_read" , "invoices_subresource","users_read"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["customers_read" ,"invoices_read", "invoices_subresource"])]
+    #[Groups(["customers_read" ,"invoices_read", "invoices_subresource", "users_read"])]
     #[assert\NotBlank(message:"L'email doit être renseigné !")]
     #[assert\Email(message:"L'adresse email doit avoir un format valide !")]
     private $email;
@@ -38,14 +38,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["customers_read" , "invoices_read","invoices_subresource"])]
+    #[Groups(["customers_read" , "invoices_read","invoices_subresource","users_read"])]
     #[assert\NotBlank(message:"Le prénom est obligatoire")]
     #[assert\Length(min:3, minMessage:"Le prénom doit faire entre 3 et 255 caractères", max:255, maxMessage:"Le prénom doit faire entre 3 et 255 caractères")]
 
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["customers_read" => "invoices_read","invoices_subresource"])]
+    #[Groups(["customers_read" => "invoices_read","invoices_subresource","users_read"])]
     #[assert\NotBlank(message:"Le prénom est obligatoire")]
     #[assert\Length(min:3, minMessage:"Le nom doit faire entre 3 et 255 caractères", max:255, maxMessage:"Le nom doit faire entre 3 et 255 caractères")]
     private $lastName;
@@ -73,6 +73,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getUsername(): string {
+        return $this->email;
     }
 
     /**
