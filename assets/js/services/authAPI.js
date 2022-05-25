@@ -19,10 +19,17 @@ function authenticate(credentials){
         });
 }
 
+/**
+ * Positionne le token JWT sur Axios
+ * @param {string} token Le token JWT
+ */
 function setAxiosToken(token) {
     axios.defaults.headers["Authorization"] = "Bearer " + token;
 }
 
+/**
+ * Mise en place lors du chargement de l'application 
+ */
 function setup() {
     // 1. Voir si on a un token ? 
     const token = window.localStorage.getItem("authToken");
@@ -35,6 +42,10 @@ function setup() {
     }
 }
 
+/**
+ * Permet de savoir si on est authentifié ou pas 
+ * @returns boolean
+ */
 function isAuthenticated() {
   // 1. Voir si on a un token ? 
   const token = window.localStorage.getItem("authToken");
