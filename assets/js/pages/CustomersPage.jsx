@@ -31,7 +31,7 @@ const CustomersPage = (props) => {
         setcustomers(customers.filter(customer => customer.id !== id))
 
         try {
-             await CustomersAPI.delete(id)    
+             await CustomersAPI.delete("/"+id)    
         } catch(error) {
             setcustomers(originalCustomers);
             console.log(error.response);
@@ -61,7 +61,7 @@ const CustomersPage = (props) => {
     return (
         <>
 
-        <div className="mb-2 d-flex justify-content-between align-items-center">
+        <div className="mb-3 d-flex justify-content-between align-items-center">
         <h1>liste des clients</h1>
         <Link to="/customers/new" className="btn btn-primary" style={{'borderRadius':'10px'}}>Créer un client</Link>
         </div>
